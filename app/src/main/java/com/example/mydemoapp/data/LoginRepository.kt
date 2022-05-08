@@ -10,22 +10,22 @@ import com.example.mydemoapp.database.UserEntityItem
  * maintains an in-memory cache of login status and user credentials information.
  */
 
-class LoginRepository(private val dataSource: AppDatabase) {
+class LoginRepository(dataSource: AppDatabase) {
 
     private val userDatabase = dataSource.getSimpleDao()
 
     // in-memory cache of the loggedInUser object
     val user: LiveData<UserEntityItem> = userDatabase.getItem(ID)
 
-    fun logout(username: String) {
-        val user = UserEntityItem(username = username)
-        dataSource.getSimpleDao().deleteEntry(user)
+    fun logout(): Boolean {
+        val rowsAffected = userDatabase.deleteByPostId(ID)
+        return rowsAffected > 0
     }
 
-    fun login(username: String) {
+    fun login(username: String): Long? {
         // save user in database
         val user = UserEntityItem(username = username)
-        userDatabase.saveItem(item = user)
+        return userDatabase.saveItem(item = user)
     }
 
 }

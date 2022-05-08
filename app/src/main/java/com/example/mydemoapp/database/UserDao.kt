@@ -7,11 +7,11 @@ import androidx.room.*
 interface UserDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun saveItem(item : UserEntityItem)
+    fun saveItem(item : UserEntityItem): Long?
 
     @Query("SELECT * FROM UserEntityItem WHERE id = :id")
     fun getItem(id: Int) : LiveData<UserEntityItem>
 
-    @Delete
-    fun deleteEntry(item: UserEntityItem)
+    @Query("DELETE FROM UserEntityItem WHERE id = :userId")
+    fun deleteByPostId(userId: Int): Int
 }

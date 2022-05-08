@@ -1,6 +1,7 @@
 package com.example.mydemoapp.ui.login
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,8 +12,9 @@ import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import com.example.mydemoapp.ui.home.MainActivity
 import com.example.mydemoapp.R
-import com.example.mydemoapp.data.LoginRepository
 import com.example.mydemoapp.database.AppDatabase
 import com.example.mydemoapp.databinding.ActivityLoginBinding
 
@@ -31,11 +33,9 @@ class LoginActivity : AppCompatActivity() {
         val login = binding.login
         val loading = binding.loading
 
-        loginViewModel = LoginViewModel(
-                loginRepository = LoginRepository(
-                        dataSource = AppDatabase.invoke(this)
-                )
-        )
+        val database = AppDatabase.invoke(this)
+        loginViewModel =
+                ViewModelProvider(this, LoginViewModelFactory(database))[LoginViewModel::class.java]
 
         loginViewModel.loginFormState.observe(this@LoginActivity, Observer {
             val loginState = it ?: return@Observer
@@ -90,12 +90,20 @@ class LoginActivity : AppCompatActivity() {
     private fun updateUiWithUser(model: LoggedInUserView) {
         val welcome = getString(R.string.welcome)
         val displayName = model.displayName
-        // TODO : initiate successful logged in experience
+
         Toast.makeText(
                 applicationContext,
                 "$welcome $displayName",
                 Toast.LENGTH_LONG
         ).show()
+
+        goToHomeScreen()
+    }
+
+    private fun goToHomeScreen(){
+        val intent = Intent(this, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
     }
 
     private fun showLoginFailed(@StringRes errorString: Int) {

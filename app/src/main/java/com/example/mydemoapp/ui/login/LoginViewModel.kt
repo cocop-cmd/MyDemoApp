@@ -25,10 +25,12 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
 
     fun login(username: String) {
         // can be launched in a separate asynchronous job
-        loginRepository.login(username)
+        val id = loginRepository.login(username)
 
-        // Todo: handle if no data was submitted
-//        _loginResult.value = LoginResult(error = R.string.login_failed)
+        if (id == null){
+            _loginResult.value = LoginResult(error = R.string.login_failed)
+        }
+
     }
 
     fun loginDataChanged(username: String) {
@@ -39,14 +41,17 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
         }
     }
 
-    // A placeholder username validation check
+    // A validation for username
     private fun isUserNameValid(username: String?): Boolean {
-        return if (username == null) {
-            false
-        } else if (username.length < 6){
-            false
-        }else {
-            username.trim { it <= ' ' }.isNotEmpty()
+        return with(username){
+            when {
+                isNullOrBlank() -> false
+                length < 6 -> false
+                else -> {
+                    trim { it <= ' ' }.isNotEmpty()
+                }
+            }
         }
     }
+
 }

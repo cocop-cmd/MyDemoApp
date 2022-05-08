@@ -1,13 +1,16 @@
 package com.example.mydemoapp.database
 
 import androidx.lifecycle.LiveData
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 
 @Dao
 interface PostDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun saveAllItems(items : List<PostEntityItem>)
+    fun savePost(items : PostEntityItem): Long?
 
     @Query("SELECT * FROM PostEntityItem")
     fun getAllItems() : LiveData<List<PostEntityItem>>
@@ -18,6 +21,6 @@ interface PostDao {
     @Query("DELETE FROM PostEntityItem")
     fun deleteEntries()
 
-    @Delete
-    fun deleteEntry(item: PostEntityItem)
+    @Query("DELETE FROM PostEntityItem WHERE id = :postId")
+    fun deleteByPostId(postId: Long): Int
 }
