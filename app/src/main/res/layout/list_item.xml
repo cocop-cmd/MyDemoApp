@@ -17,6 +17,7 @@
         android:textColor="@android:color/black"
         android:gravity="top"
         android:maxLines="2"
+        android:autoLink="web"
         tools:text="Link to NHS website"/>
 
     <TextView
