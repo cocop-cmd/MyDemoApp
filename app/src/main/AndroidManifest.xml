@@ -10,18 +10,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyDemoApp" >
         <activity
-            android:name=".MainActivity2"
-            android:exported="false"
-            android:label="@string/title_activity_main2"
-            android:theme="@style/Theme.MyDemoApp.NoActionBar" />
-        <activity
             android:name=".ui.home.MainActivity"
             android:exported="false"
             android:label="@string/title_activity_main"
             android:theme="@style/Theme.MyDemoApp.NoActionBar" />
         <activity
             android:name=".ui.login.LoginActivity"
-            android:exported="false"
+            android:exported="true"
             android:label="@string/title_activity_login" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
